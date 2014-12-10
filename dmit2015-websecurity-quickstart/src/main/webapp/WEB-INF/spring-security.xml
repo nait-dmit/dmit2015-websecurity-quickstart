@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<security:http auto-config="true" use-expressions="true"
+		access-denied-page="/pages/accessDenied.jsf">
+		<security:intercept-url pattern="/pages/manageCategories.jsf" access="hasRole('ROLE_EMPLOYEE')" />
+		<security:intercept-url pattern="/pages/manageItems.jsf" access="hasRole('ROLE_EMPLOYEE')" />
+		<security:intercept-url pattern="/pages/changePassword.jsf" access="isAuthenticated()" />
+		<security:intercept-url pattern="/pages/resetPassword.jsf" access="isAuthenticated()" />
+		<security:intercept-url pattern="/pages/login.jsf" requires-channel="https"/>
+
+		<security:form-login login-page="/pages/login.jsf" default-target-url="/pages/registerUserAccount.jsf"  />
+		<security:logout logout-success-url="/pages/registerUserAccount.jsf" />
+
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="dmit2015" password="Password2015" authorities="ROLE_EMPLOYEE"/>
+			</security:user-service>
+		</security:authentication-provider>
+		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource" 
+			users-by-username-query="SELECT emailaddress, password, enabled FROM websecurity_quickstart_useraccount WHERE emailaddress = ?"
+			authorities-by-username-query="SELECT ua.emailaddress, ur.rolename FROM websecurity_quickstart_useraccount ua INNER JOIN websecurity_quickstart_userrole ur ON ua.id = ur.id WHERE ua.emailaddress = ?"/>
+				<security:password-encoder hash="bcrypt" />
+		</security:authentication-provider>	
+	</security:authentication-manager>
+
+</beans>

@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template-dashboard.xhtml">
+	
+	<ui:param name="title" value="Login Form" />
+	
+	<ui:define name="maincontent">
+		<div class="container">
+			
+			<h2>LOG IN TO YOUR ACCOUNT</h2>
+			<c:if test="${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] != null}">
+				<p class="bg-danger">
+		            The email address or password provided is incorrect. Please try again.			
+				</p>
+			</c:if> 
+			<form method="post" action="#{request.contextPath}/j_spring_security_check">
+				
+				<div class="form-group">	
+					<p:outputLabel for="j_username" value="Username/Email Address:" />
+					<p:inputText id="j_username" styleClass="form-control"  
+						required="true"
+						requiredMessage="Email Address is required."/>
+				</div>
+				
+				<div class="form-group">	
+					<p:outputLabel for="j_password" value="Password:" />
+					<p:password id="j_password" styleClass="form-control" 
+						required="true"
+						requiredMessage="Password is required."/>
+				</div>
+				
+				<h:commandButton type="submit" value="LOG IN" 
+					styleClass="btn btn-primary"/>
+			</form>
+			
+		</div>
+	</ui:define>
+
+</ui:composition>
